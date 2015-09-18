@@ -1,4 +1,4 @@
-package BankProject;
+package com.armaanaki.helloworld;
 
 public class HelloWorld{
 	
