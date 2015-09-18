@@ -1,32 +1,17 @@
 package com.armaanaki.banking;
 
-public class BankAccount {
-
-	private int BankAccountNumber;
-	private String BankAccountHolderName;
-	private double BankAccountAmount;
+public class BankAccount{
+	String holderName = "";
+	int number = 0;
+	double amount = 0.00;
 	
-	public int getBankAccountNumber() {
-		return BankAccountNumber;
+	BankAccount(String accountHolderName, int accountNumber, double accountAmount){
+		holderName = accountHolderName;
+		number = accountNumber;
+		amount = accountAmount;
 	}
-
-	public void setBankAccountNumber(int bankAccountNumber) {
-		this.BankAccountNumber = bankAccountNumber;
-	}
-
-	public String getBankAccountHolderName(){
-		return BankAccountHolderName;
-	}
-	
-	public void setBankAccountHolderName(String bankAccountHolderName){
-		this.BankAccountHolderName = bankAccountHolderName;
-	}
-	
-	public double getBankAccountAmount(){
-		return BankAccountAmount;
-	}
-	
-	public void setBankAccountAmmount(double bankAccountAmount){
-		this.BankAccountAmount = bankAccountAmount;
+	public static void showAccountInformation(String accountHolderName, int accountNumber, double accountAmount){
+		BankAccount userAccount = new BankAccount(accountHolderName, accountNumber, accountAmount);
+		System.out.println(userAccount.number + "::" + userAccount.holderName + " currently has a balance of $" + userAccount.amount);
 	}
 }
