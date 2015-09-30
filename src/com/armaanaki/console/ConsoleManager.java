@@ -5,7 +5,9 @@ import java.util.Scanner;
 import com.armaanaki.banking.BankAccount;
 
 public class ConsoleManager {
+	//repeated invalid input message
 	private static String invalidInput = "Invalid Input, please try again.";
+	//Scanner to take input from console
 	private static Scanner userInput = new Scanner(System.in);
 	
 	//used to make a BankAccount from another class
@@ -25,12 +27,15 @@ public class ConsoleManager {
 		return accountHolder;
 	}
 	
-	//asks for the account number and checks to see if it is indeed a number
+	//asks for the account number and checks to see if it is less than 10 digits and not negative
 	private static int accountNumber(){
 		System.out.println("Please enter your account number.");
 		int accountNumber = 0;
-		while(accountNumber == 0){
-			if(userInput.hasNextInt()) accountNumber = userInput.nextInt();
+		while(accountNumber <= 0 || accountNumber >= 1000000000){
+			if(userInput.hasNextInt()){
+				accountNumber = userInput.nextInt();
+				if(accountNumber <= 0 || accountNumber >= 1000000000) System.out.println(invalidInput);
+			}
 			else{
 				System.out.println(invalidInput);
 				userInput.next();

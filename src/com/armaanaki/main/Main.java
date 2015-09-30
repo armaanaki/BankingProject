@@ -9,7 +9,7 @@ public class Main {
 		//create a bank account with preset values, will be replaced with user entry and database soon
 		BankAccount newAccount = ConsoleManager.createBankAccount();
 		//display the information of the bank account
-		newAccount.displayAccountInformation();
+		System.out.println(newAccount.toString());
 	}
 	
 }

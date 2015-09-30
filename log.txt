@@ -1,6 +1,4 @@
 Please enter the account holder's name.
 Please enter your account number.
-Invalid Input, please try again.
-Invalid Input, please try again.
 Please enter the total amount in the account.
-1234567890::Armaan currently has a balance of $123456.12
+000000001::Armaan currently has a balance of $500000000.00

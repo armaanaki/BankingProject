@@ -22,7 +22,7 @@ public class BankAccount {
 		createBankAccount(accountHolderName, accountNumber, accountTotal);
 	}
 	
-	//sets the bank account variables. Can be replaced with setters, matter of preferance(?)
+	//sets the bank account variables. Can be replaced with setters, matter of preference(?)
 	private void createBankAccount(final String accountHolderName, final int accountNumber, final double accountTotal){
 		this.accountHolderName = accountHolderName;
 		this.accountNumber = accountNumber;
@@ -30,8 +30,8 @@ public class BankAccount {
 	}
 	
 	//method to print all account information
-	public void displayAccountInformation(){
-		System.out.printf("%010d::%s currently has a balance of $%.2f", accountNumber, accountHolderName, accountTotal);
+	public String toString(){
+		return String.format("%09d::%s currently has a balance of $%.2f", accountNumber, accountHolderName, accountTotal);
 	}
 	
 	//getters and setters for BankAccount variables
