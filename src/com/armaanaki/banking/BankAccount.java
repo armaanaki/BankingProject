@@ -29,9 +29,9 @@ public class BankAccount {
 		this.accountTotal = accountTotal;
 	}
 	
-	//method to show the information of a called bank account
-	public String toString(){
-		return accountNumber + "::" + accountHolderName + " currently has a balance of $" + accountTotal;
+	//method to print all account information
+	public void displayAccountInformation(){
+		System.out.printf("%010d::%s currently has a balance of $%.2f", accountNumber, accountHolderName, accountTotal);
 	}
 	
 	//getters and setters for BankAccount variables
