@@ -1,17 +1,15 @@
 Please enter the account holder's name.
 Please enter the total amount in the account.
-Invalid Input, please try again.
-Invalid Input, please try again.
-Invalid Input, please try again.
-Invalid Input, please try again.
-Invalid Input, please try again.
-Invalid Input, please try again.
-000000001::Armaan currently has a balance of $0.01
-Please enter the total amount you wish to deposit.
-Invalid Input, please try again.
-Invalid Input, please try again.
-000000001::Armaan currently has a balance of $0.02
-Please enter the total amount you with to withdraw.
-000000001::Armaan currently has a balance of $-19.98
 Please enter the account holder's name.
-Exception in thread "main" 
+Please enter the total amount in the account.
+Please enter the account holder's name.
+Please enter the total amount in the account.
+Please enter the account holder's name.
+Please enter the total amount in the account.
+Please enter the account holder's name.
+Please enter the total amount in the account.
+000000001::Drake currently has a balance of $100.00
+000000002::Armaan currently has a balance of $101.00
+000000003::Neeni currently has a balance of $102.00
+000000004::KG currently has a balance of $103.00
+000000005::Tommy currently has a balance of $104.00

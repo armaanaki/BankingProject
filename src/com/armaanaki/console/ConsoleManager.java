@@ -10,10 +10,12 @@ public class ConsoleManager {
 	//Scanner to take input from console
 	private static Scanner userInput = new Scanner(System.in);
 	
+	public static BankAccount[] userAccounts = new BankAccount[100];
+	
 	//used to make a BankAccount from another class
-	public static BankAccount createBankAccount(){
-		BankAccount newAccount = new BankAccount(inputAccountHolder(), inputAccountTotal());
-			return newAccount;
+	public static void createBankAccount(){
+			BankAccount newAccount = new BankAccount();
+			userAccounts[newAccount.getTotalAccounts()] = new BankAccount(inputAccountHolder(), inputAccountTotal());
 	}
 	
 	//asks for account holder's name and verifies it is indeed filled out
