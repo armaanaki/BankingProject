@@ -1,15 +1,17 @@
 Please enter the account holder's name.
 Please enter the total amount in the account.
-000000001::Drake currently has a balance of $420.69
+Invalid Input, please try again.
+Invalid Input, please try again.
+Invalid Input, please try again.
+Invalid Input, please try again.
+Invalid Input, please try again.
+Invalid Input, please try again.
+000000001::Armaan currently has a balance of $0.01
+Please enter the total amount you wish to deposit.
+Invalid Input, please try again.
+Invalid Input, please try again.
+000000001::Armaan currently has a balance of $0.02
+Please enter the total amount you with to withdraw.
+000000001::Armaan currently has a balance of $-19.98
 Please enter the account holder's name.
-Please enter the total amount in the account.
-000000002::Neeni currently has a balance of $1000.00
-Please enter the account holder's name.
-Please enter the total amount in the account.
-000000003::Armaan currently has a balance of $-10000000.00
-Please enter the account holder's name.
-Please enter the total amount in the account.
-000000004::KG currently has a balance of $9999999999999.99
-Please enter the account holder's name.
-Please enter the total amount in the account.
-000000005::Heterrook currently has a balance of $-100000000000000000000000000000000000000000000000000000.00
+Exception in thread "main" 

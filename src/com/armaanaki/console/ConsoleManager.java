@@ -22,7 +22,7 @@ public class ConsoleManager {
 		String accountHolder = userInput.next();
 		while(accountHolder.isEmpty()){
 			System.out.println(invalidInput);
-			accountHolder=userInput.nextLine();
+			accountHolder=userInput.next();
 		}
 		return accountHolder;
 	}
@@ -46,17 +46,37 @@ public class ConsoleManager {
 	}
 	*/
 	
-	//asks for total amount in the bank account and validates it as a number
+	//asks for balance in the bank account
 	private static double inputAccountTotal(){
 		System.out.println("Please enter the total amount in the account.");
-		double accountTotal = 0;
-		while(accountTotal == 0){
-			if(userInput.hasNextDouble()) accountTotal = userInput.nextDouble();
+		return userInputDouble();
+	}
+	
+	//asks for amount wished to deposit
+	public  static double deposit(){
+		System.out.println("Please enter the total amount you wish to deposit.");
+		return userInputDouble();
+	}
+	
+	//asks for amount wished to withdraw
+	public static double withdraw(){
+		System.out.println("Please enter the total amount you with to withdraw.");
+		return userInputDouble();
+	}
+	
+	//creates a valid double, used for deposits, withdrawals, and setting account balance
+	private static double userInputDouble(){
+		double input =0;
+		while(input<0.01){
+			if(userInput.hasNextDouble()){
+				input = userInput.nextDouble();
+				if(input<0.01) System.out.println(invalidInput);
+			}
 			else{
 				System.out.println(invalidInput);
 				userInput.next();
 			}
 		}
-		return accountTotal;
+		return input;
 	}
 }

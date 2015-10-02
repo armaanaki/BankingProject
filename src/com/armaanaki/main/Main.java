@@ -11,7 +11,10 @@ public class Main {
 		BankAccount newAccount = ConsoleManager.createBankAccount();
 		//display the information of the bank account
 		System.out.println(newAccount.toString());
+		newAccount.deposit(ConsoleManager.deposit());
+		System.out.println(newAccount.toString());
+		newAccount.withdraw(ConsoleManager.withdraw());
+		System.out.println(newAccount.toString());
 		}
-	}
-	
+	}	
 }

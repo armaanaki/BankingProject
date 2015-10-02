@@ -41,6 +41,7 @@ public class BankAccount {
 	public void withdraw(double withdraw){
 		this.accountBalance-=withdraw;
 	}
+	
 	//method to print all account information
 	public String toString(){
 		return String.format("%09d::%s currently has a balance of $%.2f", accountNumber, accountHolderName, accountBalance);
