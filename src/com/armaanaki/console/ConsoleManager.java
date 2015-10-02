@@ -12,14 +12,14 @@ public class ConsoleManager {
 	
 	//used to make a BankAccount from another class
 	public static BankAccount createBankAccount(){
-		BankAccount newAccount = new BankAccount(accountHolder(), accountNumber(), accountTotal());
+		BankAccount newAccount = new BankAccount(inputAccountHolder(), inputAccountTotal());
 			return newAccount;
 	}
 	
 	//asks for account holder's name and verifies it is indeed filled out
-	private static String accountHolder(){
+	private static String inputAccountHolder(){
 		System.out.println("Please enter the account holder's name.");
-		String accountHolder = userInput.nextLine();
+		String accountHolder = userInput.next();
 		while(accountHolder.isEmpty()){
 			System.out.println(invalidInput);
 			accountHolder=userInput.nextLine();
@@ -27,8 +27,9 @@ public class ConsoleManager {
 		return accountHolder;
 	}
 	
+	/* CURRENTLY NOT IN USE
 	//asks for the account number and checks to see if it is less than 10 digits and not negative
-	private static int accountNumber(){
+	private static int inputAccountNumber(){
 		System.out.println("Please enter your account number.");
 		int accountNumber = 0;
 		while(accountNumber <= 0 || accountNumber >= 1000000000){
@@ -43,9 +44,10 @@ public class ConsoleManager {
 		}
 		return accountNumber;
 	}
+	*/
 	
 	//asks for total amount in the bank account and validates it as a number
-	private static double accountTotal(){
+	private static double inputAccountTotal(){
 		System.out.println("Please enter the total amount in the account.");
 		double accountTotal = 0;
 		while(accountTotal == 0){
