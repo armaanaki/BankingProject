@@ -44,7 +44,7 @@ public class BankAccount {
 	
 	//method to print all account information
 	public String toString(){
-		return String.format("%09d::%s currently has a balance of $%.2f", accountNumber, accountHolderName, accountBalance);
+		return String.format("%09d::%s currently has a balance of $%,.2f", accountNumber, accountHolderName, accountBalance);
 	}
 	
 	//getters and setters for BankAccount variables

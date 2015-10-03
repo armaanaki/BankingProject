@@ -1,15 +1,9 @@
-Please enter the account holder's name.
-Please enter the total amount in the account.
-Please enter the account holder's name.
-Please enter the total amount in the account.
-Please enter the account holder's name.
-Please enter the total amount in the account.
-Please enter the account holder's name.
-Please enter the total amount in the account.
-Please enter the account holder's name.
-Please enter the total amount in the account.
-000000001::Drake currently has a balance of $100.00
-000000002::Armaan currently has a balance of $101.00
-000000003::Neeni currently has a balance of $102.00
-000000004::KG currently has a balance of $103.00
-000000005::Tommy currently has a balance of $104.00
+Welcome! Please input a value: 
+ 1. Select a pre-existing bank account. 
+ 2. Establish a new account. 
+ 3. Exit
+Exception in thread "main" java.lang.IllegalArgumentException: No enum constant com.armaanaki.console.Intro.1
+	at java.lang.Enum.valueOf(Enum.java:238)
+	at com.armaanaki.console.Intro.valueOf(ConsoleManager.java:1)
+	at com.armaanaki.console.ConsoleManager.introSelection(ConsoleManager.java:37)
+	at com.armaanaki.main.Main.main(Main.java:8)
