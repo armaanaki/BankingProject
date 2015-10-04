@@ -11,25 +11,28 @@ public class BankAccount {
 	//the total amount (in dollars) located in the user's account
 	private double accountBalance;
 	
+	private String accountPassword;
+	
 	//the total accounts made
 	private static int totalAccounts = 0;
 	
 	//fall-back constructor in case variables aren't assigned
 	public BankAccount(){
-		createBankAccount("", 0, 0.00);
+		createBankAccount("", 0, 0.00, "");
 	}
 	
 	//main constructor used to define a bank account, includes the variables called earlier
-	public BankAccount(String accountHolderName, double accountBalance){
+	public BankAccount(String accountHolderName, double accountBalance, String accountPassword){
 		BankAccount.totalAccounts++;
-		createBankAccount(accountHolderName, BankAccount.totalAccounts, accountBalance);
+		createBankAccount(accountHolderName, BankAccount.totalAccounts, accountBalance, accountPassword);
 	}
 	
 	//sets the bank account variables. Can be replaced with setters, matter of preference(?)
-	private void createBankAccount(final String accountHolderName, final int accountNumber, final double accountBalance){
+	private void createBankAccount(final String accountHolderName, final int accountNumber, final double accountBalance, final String accountPassword){
 		this.accountHolderName = accountHolderName;
 		this.accountNumber = BankAccount.totalAccounts;
 		this.accountBalance = accountBalance;
+		this.accountPassword = accountPassword;
 	}
 	
 	//adds money to the account based on amount deposited
@@ -80,4 +83,11 @@ public class BankAccount {
 		BankAccount.totalAccounts=totalAccounts;
 	}
 	
+	public String getAccountPassword(){
+		return accountPassword;
+	}
+	
+	public void setAccountPassword(String accountPassword){
+		this.accountPassword = accountPassword;
+	}
 }

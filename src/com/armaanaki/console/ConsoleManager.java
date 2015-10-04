@@ -1,22 +1,29 @@
 package com.armaanaki.console;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 
 import com.armaanaki.banking.BankAccount;
 
 public class ConsoleManager {
+	
 	//repeated invalid input message
 	private static final String invalidInput = "Invalid Input, please try again.";
+	
 	//Scanner to take input from console
 	private static final Scanner userInput = new Scanner(System.in);
 		
 	//bank account used to gain access to totalAccounts variable
 	private static final BankAccount refrenceAccount = new BankAccount();
 	
-	//array used to store bank accounts
-	public static BankAccount[] userAccounts = new BankAccount[100];
+	//The identifier used to determine a correct BankAccount number/password combination
+	private static String currentKey;
 	
-	//first stage to select
+	//map that stores all the BankAccounts and passwords
+	private static Map<String, BankAccount> userAccounts = new HashMap<String, BankAccount>();
+	
+	//first stage to select a new account or existing one
 	public static void introSelection(){
 		while(true){
 			System.out.println("Welcome! Please input a value: \n 1. Select a pre-existing bank account. "
@@ -39,6 +46,7 @@ public class ConsoleManager {
 		}
 	}
 	
+	//allows the user to choose a pre-existing BankAccount, will fail if there are not enough accounts available
 	private static void chooseAccount(){
 		if(refrenceAccount.getTotalAccounts() > 0) {
 			System.out.println("Please enter your account number.");
@@ -48,24 +56,37 @@ public class ConsoleManager {
 		}
 	}
 	
+	//asks for user input to validate a BankAccount, they must input a correct account number/account password combination
 	private static BankAccount validateBankAccount(){
 		int accountNumber = 0;
+		String accountPassword;
 		while(true){
+			System.out.println("The account number is...");
 			if(userInput.hasNextInt()){
 				accountNumber = userInput.nextInt();
 			}
 			if(accountNumber>0 && accountNumber<=refrenceAccount.getTotalAccounts()){
-				return userAccounts[accountNumber-1];
+				System.out.println("Please enter your account password.");
+				accountPassword = userInput.next();
+				createCurrentKey(accountNumber-1, accountPassword);
+				if(userAccounts.containsKey(currentKey)){
+					return userAccounts.get(currentKey);
+				} else {
+					System.out.println(invalidInput);
+				}
 			} else { 
 				System.out.println(invalidInput);
 			}
 		}
 	}
 	
+	//gives the user options for the bank account they selected
 	public static void accountChoices(BankAccount userAccount){
 		while(true) {
+			clearCurrentKey();
 			System.out.println("Good evening " + userAccount.getAccountHolderName() + "! Here are your options: \n 1. View account information. \n "
-					+ "2. Make a transfer. \n 3. Make a deposit. \n 4. Make a withdrawl. \n 5. Change account holder name. \n 6. Return to main menu.");
+					+ "2. Make a transfer. \n 3. Make a deposit. \n 4. Make a withdrawl. \n 5. Change account holder name. \n "
+					+ "6. Change account password. \n 7. Return to main menu.");
 			String input = userInput.next();
 			
 			switch(input){
@@ -74,13 +95,17 @@ public class ConsoleManager {
 					break;
 			
 				case "2": 
-					System.out.println("What account would you like to tranfer to?");
-					BankAccount transferAccount = validateBankAccount();
-					System.out.println("How much would you like to transfer?");
-					double transferTotal = userInputDouble();
-					transferAccount.deposit(transferTotal);
-					userAccount.withdraw(transferTotal);
-					successfulTransaction(userAccount);
+					if(refrenceAccount.getTotalAccounts()>1){
+						System.out.println("What account would you like to tranfer to?");
+						BankAccount transferAccount = validateBankAccount();
+						System.out.println("How much would you like to transfer?");
+						double transferTotal = userInputDouble();
+						transferAccount.deposit(transferTotal);
+						userAccount.withdraw(transferTotal);
+						successfulTransaction(userAccount);
+					} else {
+						System.out.println("Not enough accounts to make a transfer!");
+					}
 					break;
 				
 				case "3": 
@@ -97,7 +122,17 @@ public class ConsoleManager {
 					userAccount.setAccountHolderName(inputAccountHolder());
 					break;
 				
-				case "6" : 
+				case "6" :
+					createCurrentKey(userAccount.getAccountNumber(), userAccount.getAccountPassword());
+					String oldKey = currentKey;
+					userAccount.setAccountPassword(inputAccountPassword());
+					createCurrentKey(userAccount.getAccountNumber(), userAccount.getAccountPassword());
+					userAccounts.put(currentKey, userAccounts.get(oldKey));
+					userAccounts.remove(oldKey);
+					break;
+					
+				case "7" : 
+					clearCurrentKey();
 					return;
 					
 				default: System.out.println(invalidInput);
@@ -108,20 +143,54 @@ public class ConsoleManager {
 	
 	//used to make a BankAccount from another class
 	private static void createBankAccount(){
-			userAccounts[refrenceAccount.getTotalAccounts()] = new BankAccount(inputAccountHolder(), inputAccountTotal());
-			System.out.println("Congratulations " + userAccounts[refrenceAccount.getTotalAccounts() - 1].getAccountHolderName() 
-					+ " your account number is: " + userAccounts[refrenceAccount.getTotalAccounts() - 1].getAccountNumber());
+		BankAccount user = new BankAccount(inputAccountHolder(), inputAccountTotal(), inputAccountPassword());
+		createCurrentKey(refrenceAccount.getTotalAccounts()-1, user.getAccountPassword());
+		userAccounts.put(currentKey, user);
+		System.out.println("Congratulations " + user.getAccountHolderName() + "\nYour account number is: " + user.getAccountNumber()
+		+ "\nYour account password is: " + user.getAccountPassword());
+		clearCurrentKey();
+	}
+	
+	//creates a key based on the user's account number and account password, this is used to call their specific BankAccount from the userAccouns map
+	private static void createCurrentKey(int accountNumber, String accountPassword){
+		currentKey = accountNumber + "|" + accountPassword;
+	}
+	
+	//set the key to null, force clear to make sure nothing stays when not needed
+	private static void clearCurrentKey(){
+		currentKey = null;
 	}
 	
 	//asks for account holder's name and verifies it is indeed filled out
 	private static String inputAccountHolder(){
 		System.out.println("Please enter the account holder's name.");
-		String accountHolder = userInput.next();
-		while(accountHolder.isEmpty()){
-			System.out.println(invalidInput);
-			accountHolder=userInput.next();
+		return createValidString();
+	}
+	
+	//allows the user to input an account password, also validates the user's input
+	private static String inputAccountPassword(){
+		String password;
+		while(true){
+			System.out.println("Please enter the account password.");
+			password = createValidString();
+			System.out.println("Please re-enter your password.");
+			if(password.equals(createValidString())){
+				break;
+			} else {
+				System.out.println(invalidInput);
+			}
 		}
-		return accountHolder;
+		return password;
+	}
+	
+	//create a valid, non-empty string
+	private static String createValidString(){
+		String input = userInput.next();
+		while(input.isEmpty()){
+			System.out.println(invalidInput);
+			input=userInput.next();
+		}
+		return input;
 	}
 	
 	//asks for balance in the bank account
@@ -138,7 +207,7 @@ public class ConsoleManager {
 	
 	//asks for amount wished to withdraw
 	private static double withdraw(){
-		System.out.println("Please enter the total amount you with to withdraw.");
+		System.out.println("Please enter the total amount you wish to withdraw.");
 		return userInputDouble();
 	}
 	
@@ -159,6 +228,7 @@ public class ConsoleManager {
 		return input;
 	}
 	
+	//notifies the user of a successful transaction and the balance of the account after it
 	private static void successfulTransaction(BankAccount userAccount){
 		System.out.println(String.format("Your transaction was a success! Your new balance is: $%,.2f", userAccount.getaccountBalance()));
 	}
