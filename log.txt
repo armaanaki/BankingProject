@@ -2,38 +2,3 @@ Welcome! Please input a value:
  1. Select a pre-existing bank account. 
  2. Establish a new account. 
  3. Exit
-Please enter the account holder's name.
-Please enter the total amount in the account.
-Please enter the account password.
-Please re-enter your password.
-Congratulations Armaan
-Your account number is: 1
-Your account password is: a
-Welcome! Please input a value: 
- 1. Select a pre-existing bank account. 
- 2. Establish a new account. 
- 3. Exit
-Please enter your account number.
-The account number is...
-Please enter your account password.
-Good evening Armaan! Here are your options: 
- 1. View account information. 
- 2. Make a transfer. 
- 3. Make a deposit. 
- 4. Make a withdrawl. 
- 5. Change account holder name. 
- 6. Change account password. 
- 7. Return to main menu.
-Not enough accounts to make a transfer!
-Good evening Armaan! Here are your options: 
- 1. View account information. 
- 2. Make a transfer. 
- 3. Make a deposit. 
- 4. Make a withdrawl. 
- 5. Change account holder name. 
- 6. Change account password. 
- 7. Return to main menu.
-Welcome! Please input a value: 
- 1. Select a pre-existing bank account. 
- 2. Establish a new account. 
- 3. Exit

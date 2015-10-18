@@ -3,8 +3,7 @@ package com.armaanaki.console;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
-
-import com.armaanaki.banking.BankAccount;
+import com.armaanaki.banking.*;
 
 public class ConsoleManager {
 	
@@ -15,10 +14,7 @@ public class ConsoleManager {
 	private static final Scanner userInput = new Scanner(System.in);
 		
 	//bank account used to gain access to totalAccounts variable
-	private static final BankAccount refrenceAccount = new BankAccount();
-	
-	//The identifier used to determine a correct BankAccount number/password combination
-	private static String currentKey;
+	private static final BankAccount referenceAccount = new ReferenceAccount();
 	
 	//map that stores all the BankAccounts and passwords
 	private static Map<String, BankAccount> userAccounts = new HashMap<String, BankAccount>();
@@ -48,7 +44,7 @@ public class ConsoleManager {
 	
 	//allows the user to choose a pre-existing BankAccount, will fail if there are not enough accounts available
 	private static void chooseAccount(){
-		if(refrenceAccount.getTotalAccounts() > 0) {
+		if(referenceAccount.getTotalAccounts() > 0) {
 			System.out.println("Please enter your account number.");
 			accountChoices(validateBankAccount());
 		} else {
@@ -65,16 +61,16 @@ public class ConsoleManager {
 			if(userInput.hasNextInt()){
 				accountNumber = userInput.nextInt();
 			}
-			if(accountNumber>0 && accountNumber<=refrenceAccount.getTotalAccounts()){
+			if(userAccounts.containsKey(Integer.toString(accountNumber))){
 				System.out.println("Please enter your account password.");
 				accountPassword = userInput.next();
-				createCurrentKey(accountNumber-1, accountPassword);
-				if(userAccounts.containsKey(currentKey)){
-					return userAccounts.get(currentKey);
+				BankAccount userAccount = userAccounts.get(Integer.toString(accountNumber));
+				if(userAccount.getAccountPassword().equals(accountPassword)){
+					return userAccount;
 				} else {
 					System.out.println(invalidInput);
 				}
-			} else { 
+			} else {
 				System.out.println(invalidInput);
 			}
 		}
@@ -83,7 +79,6 @@ public class ConsoleManager {
 	//gives the user options for the bank account they selected
 	public static void accountChoices(BankAccount userAccount){
 		while(true) {
-			clearCurrentKey();
 			System.out.println("Good evening " + userAccount.getAccountHolderName() + "! Here are your options: \n 1. View account information. \n "
 					+ "2. Make a transfer. \n 3. Make a deposit. \n 4. Make a withdrawl. \n 5. Change account holder name. \n "
 					+ "6. Change account password. \n 7. Return to main menu.");
@@ -95,11 +90,16 @@ public class ConsoleManager {
 					break;
 			
 				case "2": 
-					if(refrenceAccount.getTotalAccounts()>1){
+					if(referenceAccount.getTotalAccounts()>1 && userAccount.getAccountBalance()>0){
 						System.out.println("What account would you like to tranfer to?");
 						BankAccount transferAccount = validateBankAccount();
 						System.out.println("How much would you like to transfer?");
-						double transferTotal = userInputDouble();
+						double transferTotal;
+						if(userAccount.getAccountType().equals("savings")){
+							transferTotal = userInputDouble(userAccount.getAccountBalance());
+						} else {
+							transferTotal = userInputDouble(userAccount.getAccountBalance() + ((CheckingsAccount) userAccount).getTotalOverdraft());
+						}
 						transferAccount.deposit(transferTotal);
 						userAccount.withdraw(transferTotal);
 						successfulTransaction(userAccount);
@@ -114,25 +114,27 @@ public class ConsoleManager {
 					break;
 				
 				case "4": 
-					userAccount.withdraw(withdraw());
-					successfulTransaction(userAccount);
+					if(userAccount.getAccountType().equals("savings")){
+						userAccount.withdraw(withdraw(userAccount.getAccountBalance()));
+						successfulTransaction(userAccount);
+					} else {
+						if(userAccount.getAccountBalance() + ((CheckingsAccount) userAccount).getTotalOverdraft()>0){
+							userAccount.withdraw(withdraw(userAccount.getAccountBalance() + ((CheckingsAccount) userAccount).getTotalOverdraft()));
+							successfulTransaction(userAccount);
+						} else {
+							System.out.println("Not enough funds!");
+						}
+					}
 					break;
-				
 				case "5": 
 					userAccount.setAccountHolderName(inputAccountHolder());
 					break;
 				
 				case "6" :
-					createCurrentKey(userAccount.getAccountNumber(), userAccount.getAccountPassword());
-					String oldKey = currentKey;
 					userAccount.setAccountPassword(inputAccountPassword());
-					createCurrentKey(userAccount.getAccountNumber(), userAccount.getAccountPassword());
-					userAccounts.put(currentKey, userAccounts.get(oldKey));
-					userAccounts.remove(oldKey);
 					break;
 					
 				case "7" : 
-					clearCurrentKey();
 					return;
 					
 				default: System.out.println(invalidInput);
@@ -143,22 +145,64 @@ public class ConsoleManager {
 	
 	//used to make a BankAccount from another class
 	private static void createBankAccount(){
-		BankAccount user = new BankAccount(inputAccountHolder(), inputAccountTotal(), inputAccountPassword());
-		createCurrentKey(refrenceAccount.getTotalAccounts()-1, user.getAccountPassword());
-		userAccounts.put(currentKey, user);
+		System.out.println("What account would you like to create?");
+		while(true){
+			System.out.println("Type \"C\" for Checkings \nType \"S\" for Savings \nType \"E\" to exit.");
+			String input = userInput.next();
+			input.toUpperCase();
+			switch(input){
+				case "C":
+					createCheckingsAccount();
+					return;
+					
+				case "S":
+					createSavingsAccount();
+					return;
+					
+				case "E":
+					return;
+					
+				default:
+					System.out.println(invalidInput);
+					break;
+			}
+		}
+	}
+	
+	//creates a SavingsAccount from user input
+	private static void createSavingsAccount(){
+		BankAccount user = new SavingsAccount(inputAccountHolder(), inputAccountTotal(), inputAccountPassword());
+		userAccounts.put(Integer.toString(user.getAccountNumber()), user);
 		System.out.println("Congratulations " + user.getAccountHolderName() + "\nYour account number is: " + user.getAccountNumber()
 		+ "\nYour account password is: " + user.getAccountPassword());
-		clearCurrentKey();
 	}
 	
-	//creates a key based on the user's account number and account password, this is used to call their specific BankAccount from the userAccouns map
-	private static void createCurrentKey(int accountNumber, String accountPassword){
-		currentKey = accountNumber + "|" + accountPassword;
+	//creates a CheckingsAccount from user input
+	private static void createCheckingsAccount(){
+		BankAccount user = new CheckingsAccount(inputAccountHolder(), inputAccountTotal(), inputAccountPassword(), inputOverdraft());
+		userAccounts.put(Integer.toString(user.getAccountNumber()), user);
+		System.out.println("Congratulations " + user.getAccountHolderName() + "\nYour account number is: " + user.getAccountNumber()
+		+ "\nYour account password is: " + user.getAccountPassword());
 	}
 	
-	//set the key to null, force clear to make sure nothing stays when not needed
-	private static void clearCurrentKey(){
-		currentKey = null;
+	//asks if the user would like overdraft protection
+	private static boolean inputOverdraft(){
+		while(true){
+			System.out.println("Would you like overdraft protection credit? Y/N");
+			String input = userInput.next();
+			input.toUpperCase();
+			switch(input){
+				case "Y":
+					return true;
+					
+				case "N":
+					return false;
+					
+				default:
+					System.out.println(invalidInput);
+					break;
+			}
+		}
 	}
 	
 	//asks for account holder's name and verifies it is indeed filled out
@@ -196,28 +240,28 @@ public class ConsoleManager {
 	//asks for balance in the bank account
 	private static double inputAccountTotal(){
 		System.out.println("Please enter the total amount in the account.");
-		return userInputDouble();
+		return userInputDouble(Double.POSITIVE_INFINITY);
 	}
 	
 	//asks for amount wished to deposit
 	private static double deposit(){
 		System.out.println("Please enter the total amount you wish to deposit.");
-		return userInputDouble();
+		return userInputDouble(Double.POSITIVE_INFINITY);
 	}
 	
 	//asks for amount wished to withdraw
-	private static double withdraw(){
+	private static double withdraw(double max){
 		System.out.println("Please enter the total amount you wish to withdraw.");
-		return userInputDouble();
+		return userInputDouble(max);
 	}
 	
 	//creates a valid double, used for deposits, withdrawals, and setting account balance
-	private static double userInputDouble(){
+	private static double userInputDouble(double max){
 		double input =0;
-		while(input<0.01){
+		while(input<0.01 || input>max){
 			if(userInput.hasNextDouble()){
 				input = userInput.nextDouble();
-				if(input<0.01){
+				if(input<0.01 || input>max){
 					System.out.println(invalidInput);
 				}
 			} else {
@@ -230,6 +274,10 @@ public class ConsoleManager {
 	
 	//notifies the user of a successful transaction and the balance of the account after it
 	private static void successfulTransaction(BankAccount userAccount){
-		System.out.println(String.format("Your transaction was a success! Your new balance is: $%,.2f", userAccount.getaccountBalance()));
+		if (userAccount.getAccountType().equals("savings")){
+			System.out.println(String.format("Your transaction was a success! Your new balance is: $%,.2f \nYour total interest is: $%,.2f", userAccount.getAccountBalance(), ((SavingsAccount) userAccount).getTotalInterest()));
+		} else {
+			System.out.println(String.format("Your transaction was a success! Your new balance is: $%,.2f", userAccount.getAccountBalance()));
+		}
 	}
 }

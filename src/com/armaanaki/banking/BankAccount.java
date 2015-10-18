@@ -1,6 +1,6 @@
 package com.armaanaki.banking;
 
-public class BankAccount {
+public abstract class BankAccount {
 	
 	//the unique number that identifies the account
 	private int accountNumber;
@@ -11,12 +11,16 @@ public class BankAccount {
 	//the total amount (in dollars) located in the user's account
 	private double accountBalance;
 	
+	//the account's password
 	private String accountPassword;
+	
+	//the account type
+	private String accountType;
 	
 	//the total accounts made
 	private static int totalAccounts = 0;
 	
-	//fall-back constructor in case variables aren't assigned
+	/*//fall-back constructor in case variables aren't assigned
 	public BankAccount(){
 		createBankAccount("", 0, 0.00, "");
 	}
@@ -33,21 +37,25 @@ public class BankAccount {
 		this.accountNumber = BankAccount.totalAccounts;
 		this.accountBalance = accountBalance;
 		this.accountPassword = accountPassword;
+	}*/
+	
+	protected void createdNewAccount(){
+		totalAccounts++;
 	}
 	
 	//adds money to the account based on amount deposited
-	public void deposit(double deposit){
+	public abstract void deposit(double deposit);/*{
 		this.accountBalance+=deposit;
-	}
+	}*/
 	
 	//removes money from the account based on amount withdrawn
-	public void withdraw(double withdraw){
-		this.accountBalance-=withdraw;
-	}
+	public abstract void withdraw(double withdraw);/*{
+		//this.accountBalance-=withdraw;
+	}*/
 	
 	//method to print all account information
 	public String toString(){
-		return String.format("%09d::%s currently has a balance of $%,.2f", accountNumber, accountHolderName, accountBalance);
+		return String.format("%09d::%s's %s currently has a balance of $%,.2f", accountNumber, accountHolderName, accountType, accountBalance);
 	}
 	
 	//getters and setters for BankAccount variables
@@ -67,11 +75,11 @@ public class BankAccount {
 		this.accountHolderName = accountHolderName;
 	}
 	
-	public double getaccountBalance(){
+	public double getAccountBalance(){
 		return accountBalance;
 	}
 	
-	public void setBankaccountBalance(double accountBalance){
+	public void setAccountBalance(double accountBalance){
 		this.accountBalance = accountBalance;
 	}
 	
@@ -89,5 +97,13 @@ public class BankAccount {
 	
 	public void setAccountPassword(String accountPassword){
 		this.accountPassword = accountPassword;
+	}
+	
+	public String getAccountType(){
+		return accountType;
+	}
+	
+	public void setAccountType(String accountType){
+		this.accountType=accountType;
 	}
 }
