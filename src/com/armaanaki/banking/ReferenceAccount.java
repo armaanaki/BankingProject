@@ -1,14 +1,14 @@
 package com.armaanaki.banking;
 
 //creates a reference account used to retrieve the total BankAccounts made
-public class ReferenceAccount extends BankAccount{
+public class ReferenceAccount extends BankAccount {
 	
 	public ReferenceAccount(){
 		setAccountHolderName("");
 		setAccountBalance(0);
 		setAccountPassword("");
 		setAccountNumber(0);
-		setAccountType("Refrence Account");
+		setAccountType("Reference Account");
 	}
 
 	public void deposit(double deposit) {	

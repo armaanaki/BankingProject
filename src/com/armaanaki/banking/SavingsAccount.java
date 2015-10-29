@@ -1,16 +1,16 @@
 package com.armaanaki.banking;
 
-public class SavingsAccount extends BankAccount{
+public class SavingsAccount extends BankAccount {
 	
 	private double totalInterest;
 	
-	public SavingsAccount(String accountHolderName, double accountBalance, String accountPassword){
-		createdNewAccount();
+	public SavingsAccount(String accountHolderName, int accountNumber, double accountBalance, String accountPassword, double totalInterest) {
 		setAccountHolderName(accountHolderName);
 		setAccountBalance(accountBalance);
 		setAccountPassword(accountPassword);
 		setAccountNumber(getTotalAccounts());
 		setAccountType("savings");
+		this.totalInterest = totalInterest;
 	}
 
 	public void deposit(double deposit) {
@@ -23,11 +23,11 @@ public class SavingsAccount extends BankAccount{
 		setAccountBalance(getAccountBalance() - withdraw);
 	}
 
-	public double getTotalInterest(){
+	public double getTotalInterest() {
 		return totalInterest;
 	}
 	
-	public void setTotalInterest(double totalInterest){
+	public void setTotalInterest(double totalInterest) {
 		this.totalInterest = totalInterest;
 	}
 }
